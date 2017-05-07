@@ -1,3 +1,4 @@
+
 var promise = require('bluebird');
 
 var options = {
@@ -13,8 +14,23 @@ var db = pgp(connectionString);
 
 module.exports = {
   getUserInfo: getUserInfo,
-  getAllUsers: getAllUsers
+  getAllUsers: getAllUsers,
+  findUser: findUser
 };
+
+function findUser(email, password) {
+
+console.log(email);
+console.log(password);
+  db.one('select * from userAuth where email = $1 and password =$2',[email, password])
+    .then(function (data) {
+      return true;
+    })
+    .catch(function (err) {
+      return false;
+    });
+}
+
 
 function getAllUsers(req, res, next) {
   db.any('select * from userinfo')

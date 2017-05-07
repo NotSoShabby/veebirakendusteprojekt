@@ -12,7 +12,6 @@ router.use(sessions({
   duration: 24*60*60*1000,
   activeDuration: 1000*5*5
 }))
-
 router.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -22,11 +21,15 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/login', function(req, res,next){
-  req.mySession.username = req.body.username;
-  req.mySession.password = req.body.password;
-    res.redirect('/home');
+router.post('/login', function(req,res,next){
+  if(db.finduser(req.body.username, req.body.password)){
+    res.json({
+          email: req.body.username,
+          password: req.body.password
+      });
+    }
 });
+
 router.get('/home', db.getUserInfo);
 
 router.get('/mycourses', db.getAllUsers);
